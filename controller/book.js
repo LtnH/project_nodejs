@@ -1,3 +1,5 @@
+const Book = require('../model/book')
+
 exports.getPosts = (req, res, next) => {
     res.status(200).json({
         posts: [
@@ -17,15 +19,26 @@ exports.getPosts = (req, res, next) => {
 exports.postNew = (req, res, next) => {
     const title = req.body.title;
     const author = req.body.author;
+    const gender = req.body.gender;
+    const date = req.body.date;
+    const available = req.body.available;
 
-    res.status(201).json({
-        message: 'book added successfully.',
-        post: {
-            _id: new Date().toString(),
-            title: title,
-            author: author,
-            creator: {name: 'Sciences-u'},
-            createdAt: new Date()
-        }
+    const book = new Book({
+        title: title,
+        author: author,
+        gender: gender,
+        date: date,
+        available: available,
     })
+
+    book
+        .save()
+        .then(result => {
+        res.status(201).json({
+            message: 'Post created successfully!',
+            post: result
+        });
+    }).catch(err =>{
+        console.log(err);
+    });
 }

@@ -1,7 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 
 const bookRoutes = require('./routes/book');
+const {mongo} = require("mongoose");
 
 const app = express();
 
@@ -19,4 +21,9 @@ app.use((req, res, next) => {
 
 app.use('/book', bookRoutes);
 
-app.listen(8080);
+mongoose.connect(
+    'mongodb+srv://MonRoot:Secret1234@nodetest.016m1.mongodb.net/test'
+).then(result => {
+    app.listen(8080);
+})
+
