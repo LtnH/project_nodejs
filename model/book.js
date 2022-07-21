@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const {stringify} = require("nodemon/lib/utils");
 const Schema = mongoose.Schema;
 
 const bookSchema = new Schema(
@@ -17,7 +16,7 @@ const bookSchema = new Schema(
             required: true
         },
         date: {
-            type: String,
+            type: Number,
             required: true
         },
         available: {

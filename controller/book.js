@@ -1,22 +1,29 @@
 const Book = require('../model/book')
+const { validationsResult } = require('express-validator/check')
 
-exports.getPosts = (req, res, next) => {
-    res.status(200).json({
-        posts: [
-            {
-                _id: '1',
-                title: 'harry Poter',
-                author: 'J-K Rowling',
-                creator: {
-                    name: 'Mario',
-                },
-                createdAt: new Date()
+exports.getAll = (req, res, next) => {
+    Book.find()
+        .then(posts => {
+            res
+                .status(200)
+                .json({ message: 'Fetched posts successfully.', posts: posts });
+        })
+        .catch(err => {
+            if (!err.statusCode) {
+                err.statusCode = 500;
             }
-        ]
-    });
+            next(err);
+        });
 };
 
 exports.postNew = (req, res, next) => {
+    const errors = validationsResult(req);
+    if (errors.isEmpty()) {
+        const error = new Error('Validation failed, data is incorrect.');
+        error.statusCode = 422;
+        throw error;
+    }
+
     const title = req.body.title;
     const author = req.body.author;
     const gender = req.body.gender;
@@ -41,4 +48,23 @@ exports.postNew = (req, res, next) => {
     }).catch(err =>{
         console.log(err);
     });
-}
+};
+
+exports.getOne = (req, res, next) => {
+    const bookId = req.params.bookId;
+    Book.findById(bookId)
+        .then(post => {
+            if (!post) {
+                const error = new Error('book not exist.');
+                error.statusCode = 404;
+                throw error;
+            }
+            res.status(200).json({ message: 'find your book !', post: post})
+        })
+        .catch(err => {
+            if (!err.statusCode) {
+                err.statusCode = 500;
+            }
+            next(err);
+        });
+};
