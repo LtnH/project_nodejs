@@ -1,0 +1,223 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "My User Project CRUD",
+    "description": "My User Project Application API",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "host": "localhost:8080",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Users",
+      "description": "API for users in the system"
+    }
+  ],
+  "schemes": ["http"],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+
+  "paths": {
+    "/book/all": {
+      "get": {
+        "tags": [
+          "Book"
+        ],
+        "summary": "Get all books in the base",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Fetched all books successfully",
+            "schema": {
+              "$ref": "#/definitions/Book"
+            }
+          }
+        }
+      }
+    },
+    "/book/info/": {
+      "get": {
+        "tags": [
+          "Book"
+        ],
+        "summary": "Get information from a book",
+        "operationId": "",
+        "parameters": [
+          {
+            "name": "bookId",
+            "in": "path",
+            "description": "the id of the book you want to see the information",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "find your book !",
+            "schema": {
+              "$ref": "#/definitions/Book"
+            }
+          },
+          "404": {
+            "description": "book not exist."
+          }
+        }
+      }
+    },
+    "/book/available": {
+      "put": {
+        "tags": [
+          "Book"
+        ],
+        "summary": "change the status of availability for a book ",
+        "parameters": [
+          {
+            "name": "bookId",
+            "in": "query",
+            "description": "the id of the book you want to see the information",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "available",
+            "in": "query",
+            "description": "New status of availability of the book",
+            "required": true,
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Book availability updated !",
+            "schema": {
+              "$ref": "#/definitions/Book"
+            }
+          },
+          "404": {
+            "description": "Book not exist."
+          }
+        }
+      }
+    },
+    "/book/new": {
+      "post": {
+        "tags": [
+          "Book"
+        ],
+        "summary": "Add a new book",
+        "parameters": [
+          {
+            "name": "book",
+            "in": "body",
+            "description": "Value of the new book we want to create",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "title",
+                "author",
+                "gender",
+                "date",
+                "available"
+              ],
+              "properties": {
+                "title": {
+                  "description": "Name of the book",
+                  "type": "string"
+                },
+                "author": {
+                  "description": "Name of the author",
+                  "type": "string"
+                },
+                "gender": {
+                  "description": "Gender of the book",
+                  "type": "string"
+                },
+                "date": {
+                  "description": "release year of the book",
+                  "type": "number"
+                },
+                "available": {
+                  "description": "availability of the book",
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Book created successfully !",
+            "schema": {
+              "$ref": "#/definitions/Book"
+            }
+          }
+        }
+      }
+    },
+    "/book/suppress": {
+      "delete": {
+        "tags": [
+          "Book"
+        ],
+        "summary": "Suppress a book",
+        "parameters": [
+          {
+            "name": "bookId",
+            "in": "query",
+            "description": "Id of the book to delete",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Book as been deleted !"
+          },
+          "404": {
+            "description": "Book not exist."
+          }
+        }
+      }
+    }
+  },
+
+  "definitions": {
+    "Book": {
+      "required": [
+        "title",
+        "author",
+        "gender",
+        "date",
+        "available"
+      ],
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "author": {
+          "type": "string"
+        },
+        "gender": {
+          "type": "string"
+        },
+        "date": {
+          "type": "number"
+        },
+        "available": {
+          "type": "boolean"
+        },
+        "_id": {
+          "type": "string"
+        },
+        "__v": {
+          "type": "number"
+        }
+      }
+    }
+  }
+}

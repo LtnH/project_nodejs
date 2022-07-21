@@ -6,7 +6,7 @@ exports.getAll = (req, res, next) => {
         .then(posts => {
             res
                 .status(200)
-                .json({ message: 'Fetched posts successfully.', posts: posts });
+                .json({ message: 'Fetched all books successfully.', posts: posts });
         })
         .catch(err => {
             if (!err.statusCode) {
@@ -43,7 +43,7 @@ exports.postNew = (req, res, next) => {
         .save()
         .then(result => {
         res.status(201).json({
-            message: 'Post created successfully!',
+            message: 'Book created successfully !',
             post: result
         });
     }).catch(err =>{
@@ -90,7 +90,7 @@ exports.putAvailable = (req, res, next) => {
                 error.statusCode = 404;
                 throw error;
             }
-            res.status(200).json({ message: 'Book availability update !', post: post})
+            res.status(200).json({ message: 'Book availability updated !', post: post})
         })
         .catch(err => {
             if (!err.statusCode) {
