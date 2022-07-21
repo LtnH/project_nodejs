@@ -1,5 +1,5 @@
 const Book = require('../model/book')
-const { validationsResult } = require('express-validator/check')
+const { validationResult } = require('express-validator/check')
 
 exports.getAll = (req, res, next) => {
     Book.find()
@@ -17,8 +17,9 @@ exports.getAll = (req, res, next) => {
 };
 
 exports.postNew = (req, res, next) => {
-    const errors = validationsResult(req);
-    if (errors.isEmpty()) {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
         const error = new Error('Validation failed, data is incorrect.');
         error.statusCode = 422;
         throw error;
@@ -50,8 +51,9 @@ exports.postNew = (req, res, next) => {
     });
 };
 
-exports.getOne = (req, res, next) => {
+exports.getInfo = (req, res, next) => {
     const bookId = req.params.bookId;
+
     Book.findById(bookId)
         .then(post => {
             if (!post) {
@@ -60,6 +62,55 @@ exports.getOne = (req, res, next) => {
                 throw error;
             }
             res.status(200).json({ message: 'find your book !', post: post})
+        })
+        .catch(err => {
+            if (!err.statusCode) {
+                err.statusCode = 500;
+            }
+            next(err);
+        });
+};
+
+exports.putAvailable = (req, res, next) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        const error = new Error('Validation failed, data is incorrect.');
+        error.statusCode = 422;
+        throw error;
+    }
+
+    const bookId = req.query.bookId;
+    const available = req.query.available;
+
+    Book.findByIdAndUpdate(bookId, { available: available }, {new: true})
+        .then(post => {
+            if (!post) {
+                const error = new Error('book not exist.');
+                error.statusCode = 404;
+                throw error;
+            }
+            res.status(200).json({ message: 'Book availability update !', post: post})
+        })
+        .catch(err => {
+            if (!err.statusCode) {
+                err.statusCode = 500;
+            }
+            next(err);
+        });
+};
+
+exports.deleteSuppress = (req, res, next) => {
+    const bookId = req.query.bookId;
+
+    Book.findByIdAndDelete(bookId)
+        .then(post => {
+            if (!post) {
+                const error = new Error('book not exist.');
+                error.statusCode = 404;
+                throw error;
+            }
+            res.status(200).json({message: 'Book as been deleted !'})
         })
         .catch(err => {
             if (!err.statusCode) {
